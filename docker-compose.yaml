@@ -5,9 +5,12 @@ services:
     build: .
     ports:
       - '3000:3000'
+      - '9229:9229'
     volumes:
       - ./:/app
       - /app/node_modules
+    stdin_open: true
+    tty: true
     depends_on:
       - mongo
     container_name: server

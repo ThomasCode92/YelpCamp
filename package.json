@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon --inspect=0.0.0.0:9229 app.js"
   },
   "keywords": [],
   "author": "ThomasCode92",
