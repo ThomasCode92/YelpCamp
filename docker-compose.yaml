@@ -4,11 +4,24 @@ services:
   server:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./:/app
       - /app/node_modules
+    depends_on:
+      - mongo
     container_name: server
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    env_file:
+      - ./env/mongodb.env
+    volumes:
+      - mongodb-data:/data/db
+    container_name: database
 
   npm:
     image: thomascode92/docker-util:mynpm
@@ -19,3 +32,8 @@ services:
     profiles:
       - tools
     container_name: mynpm
+
+volumes:
+  mongodb-data:
+    name: mongodb-data
+    external: true
