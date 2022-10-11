@@ -1,7 +1,16 @@
 version: '3.8'
 
 services:
- npm:
+  server:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    container_name: server
+
+  npm:
     image: thomascode92/docker-util:mynpm
     stdin_open: true
     tty: true
