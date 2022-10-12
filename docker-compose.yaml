@@ -6,6 +6,8 @@ services:
     ports:
       - '3000:3000'
       - '9229:9229'
+    env_file:
+      - ./env/server.env
     volumes:
       - ./:/app
       - /app/node_modules
@@ -32,6 +34,8 @@ services:
     tty: true
     volumes:
       - ./:/app
+    env_file:
+      - ./env/server.env
     profiles:
       - tools
     container_name: mynpm
