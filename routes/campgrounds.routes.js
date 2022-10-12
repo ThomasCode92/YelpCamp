@@ -43,4 +43,10 @@ router.put('/:id', async (req, res) => {
   res.redirect(`/campgrounds/${campgroundId}`);
 });
 
+router.delete('/:id', async (req, res) => {
+  const campgroundId = req.params.id;
+  await Campground.findByIdAndDelete(campgroundId);
+  res.redirect('/campgrounds');
+});
+
 module.exports = router;
