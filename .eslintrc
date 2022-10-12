@@ -4,6 +4,7 @@
   "rules": {
     "prettier/prettier": "warn",
     "no-console": "off",
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
   }
 }
