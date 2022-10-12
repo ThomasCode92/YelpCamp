@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 const campgroundRoutes = require('./routes/campgrounds.routes');
 
@@ -12,6 +13,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true })); // Parse incoming request bodies
+
+app.use(methodOverride('_method')); // Override POST requests having _method in the query string
 
 app.use('/campgrounds', campgroundRoutes);
 
