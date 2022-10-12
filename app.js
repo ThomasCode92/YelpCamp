@@ -7,8 +7,6 @@ const Campground = require('./models/campground.model');
 
 const app = express();
 
-const DB_CONNECTION_STRING = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongo:27017/${process.env.DB_NAME}?authSource=admin`;
-
 // Activate EJS view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -18,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 mongoose
-  .connect(DB_CONNECTION_STRING)
+  .connect(process.env.MONGODB_CONNECTION)
   .then(() => console.log('Connected to MongoDB'))
   .then(() => {
     app.listen(3000, () => {

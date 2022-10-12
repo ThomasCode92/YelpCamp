@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start:dev": "nodemon --inspect=0.0.0.0:9229 app.js"
+    "start:dev": "nodemon --inspect=0.0.0.0:9229 app.js",
+    "seedDb": "node seeds"
   },
   "keywords": [],
   "author": "ThomasCode92",

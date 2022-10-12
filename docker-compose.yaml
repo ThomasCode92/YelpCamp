@@ -34,6 +34,8 @@ services:
     tty: true
     volumes:
       - ./:/app
+    env_file:
+      - ./env/server.env
     profiles:
       - tools
     container_name: mynpm
