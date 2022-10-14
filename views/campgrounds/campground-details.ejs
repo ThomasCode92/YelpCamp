@@ -1,13 +1,15 @@
 <%- include('../shared/includes/head', { pageTitle: campground.title }) %>
   </head>
   <body>
-    <h1><%= campground.title %></h1>
-    <p><%= campground.location %></p>
-    <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-      <button>Delete</button>
-    </form>
-    <footer>
-      <a href="/campgrounds/<%= campground._id %>/edit">Edit Campgrounds</a>
-      <a href="/campgrounds">All Campgrounds</a>
-    </footer>
+    <main class="container">
+      <h1><%= campground.title %></h1>
+      <p><%= campground.location %></p>
+      <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+        <button>Delete</button>
+      </form>
+      <footer>
+        <a href="/campgrounds/<%= campground._id %>/edit">Edit Campgrounds</a>
+        <a href="/campgrounds">All Campgrounds</a>
+      </footer>
+    </main>
 <%- include('../shared/includes/footer') %>
