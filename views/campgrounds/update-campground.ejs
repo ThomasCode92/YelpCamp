@@ -1,6 +1,7 @@
 <%- include('../shared/includes/head', { pageTitle: 'Update Campground' }) %>
   </head>
   <body>
+    <%- include('../shared/includes/navbar') %>
     <main class="container">
       <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
         <div>
