@@ -4,7 +4,9 @@
     <%- include('../shared/includes/navbar') %>
     <main class="container">
       <h1><%= campground.title %></h1>
-      <p><%= campground.location %></p>
+      <h3><%= campground.location %></h3>
+      <img src="<%= campground.image %>" alt="" />
+      <p><%= campground.description %></p>
       <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
         <button>Delete</button>
       </form>
