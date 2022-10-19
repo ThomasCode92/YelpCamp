@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "start:dev": "nodemon --inspect=0.0.0.0:9229 app.js",
     "seedDb": "node seeds"
