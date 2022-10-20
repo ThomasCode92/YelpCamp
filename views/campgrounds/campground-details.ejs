@@ -3,16 +3,31 @@
   <body>
     <%- include('../shared/includes/navbar') %>
     <main class="container">
-      <h1><%= campground.title %></h1>
-      <h3><%= campground.location %></h3>
-      <img src="<%= campground.image %>" alt="" />
-      <p><%= campground.description %></p>
-      <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-        <button>Delete</button>
-      </form>
-      <footer>
-        <a href="/campgrounds/<%= campground._id %>/edit">Edit Campgrounds</a>
-        <a href="/campgrounds">All Campgrounds</a>
-      </footer>
+      <div class="row">
+        <div class="col-6 offset-3">
+          <div class="card mb-3">
+            <img class="card-img-top" src="<%= campground.image %>" alt="<%= campground.title %>">
+            <div class="card-body">
+              <h5 class="card-title"><%= campground.title %></h5>
+              <p class="card-text"><%= campground.description %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-muted"><%= campground.location %></li>
+              <li class="list-group-item">$<%= campground.price %>/night</li>
+            </ul>
+            <div class="card-body">
+              <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning card-link">Edit</a>
+              <form
+                action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST"
+                class="d-inline">
+                <button class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+            <footer class="card-footer">
+              <a href="/campgrounds">All Campgrounds</a>
+            </footer>
+          </div>
+        </div>
+      </div>     
     </main>
 <%- include('../shared/includes/footer') %>
