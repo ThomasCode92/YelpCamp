@@ -26,16 +26,23 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const campground = new Campground({ ...req.body.campground });
+  const { title, location, image, price, description } = req.body.campground;
+
+  const campgroundData = { title, location, image, price, description };
+  const campground = new Campground(campgroundData);
+
   await campground.save();
+  
   res.redirect(`/campgrounds/${campground._id}`);
 });
 
 router.put('/:id', async (req, res) => {
   const campgroundId = req.params.id;
-  const { title, location } = req.body.campground;
+  const { title, location, image, price, description } = req.body.campground;
 
-  await Campground.findByIdAndUpdate(campgroundId, { title, location });
+  const campgroundData = { title, location, image, price, description };
+
+  await Campground.findByIdAndUpdate(campgroundId, campgroundData);
 
   res.redirect(`/campgrounds/${campgroundId}`);
 });
