@@ -1,0 +1,46 @@
+<form action="<%= submitUrl %>" method="POST">
+  <div class="mb-3">
+    <label class="form-label" for="title">Title</label>
+    <input
+      class="form-control" id="title"
+      type="text" name="campground[title]"
+      value="<%= campground ? campground.title : '' %>" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="location">Location</label>
+    <input
+      class="form-control" id="location"
+      type="text" name="campground[location]"
+      value="<%= campground ? campground.location : '' %>" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="image">Image</label>
+    <input
+      class="form-control" id="image"
+      type="text" name="campground[image]"
+      value="<%= campground ? campground.image : '' %>" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="price">Price</label>
+    <div class="input-group">
+      <span class="input-group-text">$</span>
+      <input
+        class="form-control" id="price"
+        type="number" name="campground[price]" placeholder="0,00"
+        value="<%= campground ? campground.price : '' %>"
+        min="0.01" step="0.01" />
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="description">Description</label>
+    <textarea
+      class="form-control" id="location"
+      rows="5" name="campground[description]"
+    ><%= campground ? campground.description : '' %></textarea>
+  </div>
+  <div class="mb-3">
+    <button class="btn btn-success">
+      <%= campground ? 'Update Campground' : 'Add Campground' %>
+    </button>
+  </div>
+</form>

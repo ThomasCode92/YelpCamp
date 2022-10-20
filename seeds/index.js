@@ -19,11 +19,21 @@ const seedDB = async () => {
     const randomCity = citiesData[randomCityIndex];
     const randomDescriptor = getRandomElement(descriptors);
     const randomPlace = getRandomElement(places);
+    const randomPrice = Math.floor(Math.random() * 20) + 10;
 
     const title = `${randomDescriptor} ${randomPlace}`;
+    const image = 'https://source.unsplash.com/collection/483251';
     const location = `${randomCity.city}, ${randomCity.state}`;
+    const description =
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Adipisci, molestias labore. Nulla, facere adipisci corporis dignissimos veniam quidem ipsa quasi nemo!';
 
-    const campground = new Campground({ title, location });
+    const campground = new Campground({
+      title,
+      image,
+      price: randomPrice,
+      location,
+      description,
+    });
 
     campgrounds.push(campground.save());
   }
