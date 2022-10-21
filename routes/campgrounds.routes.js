@@ -32,19 +32,22 @@ router.post('/', async (req, res) => {
   const campground = new Campground(campgroundData);
 
   await campground.save();
-  
+
   res.redirect(`/campgrounds/${campground._id}`);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
   const campgroundId = req.params.id;
   const { title, location, image, price, description } = req.body.campground;
 
   const campgroundData = { title, location, image, price, description };
 
-  await Campground.findByIdAndUpdate(campgroundId, campgroundData);
-
-  res.redirect(`/campgrounds/${campgroundId}`);
+  try {
+    await Campground.findByIdAndUpdate(campgroundId, campgroundData);
+    res.redirect(`/campgrounds/${campgroundId}`);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.delete('/:id', async (req, res) => {

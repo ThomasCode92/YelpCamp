@@ -19,6 +19,10 @@ app.use(methodOverride('_method')); // Override POST requests having _method in 
 
 app.use('/campgrounds', campgroundRoutes);
 
+app.use((error, req, res, next) => {
+  res.render('shared/500.ejs');
+});
+
 mongoose
   .connect(process.env.MONGODB_CONNECTION)
   .then(() => console.log('Connected to MongoDB'))
