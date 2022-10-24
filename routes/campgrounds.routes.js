@@ -1,6 +1,8 @@
 const express = require('express');
+const Joi = require('joi');
 
 const catchAsync = require('../util/catchAsync');
+const ExpressError = require('../util/ExpressError');
 
 const Campground = require('../models/campground.model');
 
@@ -39,6 +41,23 @@ router.get(
 router.post(
   '/',
   catchAsync(async (req, res) => {
+    const campgroundSchema = Joi.object({
+      campground: Joi.object({
+        title: Joi.string().required(),
+        price: Joi.number().required().min(0.01),
+        image: Joi.number().required(),
+        location: Joi.number().required(),
+        description: Joi.number().required(),
+      }).required(),
+    });
+
+    const result = campgroundSchema.validate(req.body);
+
+    if (result.error) {
+      console.log(result.error.details);
+      throw new ExpressError('Something went wrong', 500);
+    }
+
     const { title, location, image, price, description } = req.body.campground;
 
     const campgroundData = { title, location, image, price, description };
