@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
 const CampgroundSchema = new Schema({
   title: String,
@@ -8,6 +8,7 @@ const CampgroundSchema = new Schema({
   price: Number,
   description: String,
   location: String,
+  reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
 });
 
-module.exports = mongoose.model('Campround', CampgroundSchema);
+module.exports = model('Campround', CampgroundSchema);
