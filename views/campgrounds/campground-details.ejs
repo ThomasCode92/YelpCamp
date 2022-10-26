@@ -1,4 +1,5 @@
 <%- include('../shared/includes/head', { pageTitle: campground.title }) %>
+    <script src="/scripts/reviews.js" defer></script>
   </head>
   <body>
     <%- include('../shared/includes/navbar') %>
@@ -28,7 +29,7 @@
             </footer>
           </div>
           <h2>Leave a Review</h2>
-          <%- include('includes/review-form') %>
+          <%- include('includes/review-form', { campground }) %>
         </div>
       </div>     
     </main>

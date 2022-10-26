@@ -6,7 +6,8 @@ const methodOverride = require('method-override');
 
 const ExpressError = require('./util/ExpressError');
 
-const campgroundRoutes = require('./routes/campgrounds.routes');
+const campgroundsRoutes = require('./routes/campgrounds.routes');
+const reviewsRoutes = require('./routes/reviews.routes');
 
 const app = express();
 
@@ -16,10 +17,12 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static('public')); // Serve static files (e.g. CSS files)
 app.use(express.urlencoded({ extended: true })); // Parse incoming request bodies
+app.use(express.json());
 
 app.use(methodOverride('_method')); // Override POST requests having _method in the query string
 
-app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds', campgroundsRoutes);
+app.use('/campgrounds/:campId/reviews', reviewsRoutes);
 
 app.all('*', (req, res, next) => {
   const error = new ExpressError('Page not found!', 404);
