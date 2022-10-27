@@ -32,7 +32,7 @@ async function createReviews() {
   const responseData = await response.json();
 
   if (!response.ok) {
-    throw new Error('Something went wrong - could not fetch reviews.');
+    throw new Error(responseData.message);
   }
 
   const reviews = responseData.data;

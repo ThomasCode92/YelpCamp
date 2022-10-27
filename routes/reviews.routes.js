@@ -1,17 +1,16 @@
 const express = require('express');
 
 const validateReview = require('../middleware/validate-review');
-const catchAsync = require('../util/catchAsync');
 
 const Campground = require('../models/campground.model');
 const Review = require('../models/review.model');
 
 const router = express.Router({ mergeParams: true });
 
-router.get(
-  '/',
-  catchAsync(async (req, res, next) => {
-    const campgroundId = req.params.campId;
+router.get('/', async (req, res, next) => {
+  const campgroundId = req.params.campId;
+
+  try {
     const campground = await Campground.findById(campgroundId);
 
     await campground.populate('reviews');
@@ -20,33 +19,34 @@ router.get(
       message: 'Reviews fetched successfully',
       data: campground.reviews,
     });
-  })
-);
+  } catch (error) {
+    res.status(404).json({ message: 'Campground not found!' });
+  }
+});
 
-router.post(
-  '/',
-  validateReview,
-  catchAsync(async (req, res, next) => {
-    const campgroundId = req.params.campId;
-    const { rating, text } = req.body.review;
+router.post('/', validateReview, async (req, res, next) => {
+  const campgroundId = req.params.campId;
+  const { rating, text } = req.body.review;
 
-    if (!req.error) {
-      const newReview = { body: text, rating: parseInt(rating, 10) };
+  const newReview = { body: text, rating: parseInt(rating, 10) };
 
-      const campground = await Campground.findById(campgroundId);
-      const review = new Review(newReview);
+  try {
+    if (req.error) throw req.error; // req.error is a ExpressError
 
-      campground.reviews.push(review);
+    const campground = await Campground.findById(campgroundId);
+    const review = new Review(newReview);
 
-      await Promise.all([review.save(), campground.save()]);
+    campground.reviews.push(review);
 
-      res.json({ message: 'Review created successfully', data: review });
-    } else {
-      // Error comes from validateReview middleware
-      const { statusCode, message } = req.error;
-      res.status(statusCode).json({ message });
-    }
-  })
-);
+    await Promise.all([review.save(), campground.save()]);
+
+    res.json({ message: 'Review created successfully', data: review });
+  } catch (error) {
+    console.log(error);
+
+    const { statusCode = 500, message = 'Something went wrong!' } = error;
+    res.status(statusCode).json({ message });
+  }
+});
 
 module.exports = router;
