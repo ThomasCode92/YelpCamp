@@ -6,8 +6,16 @@ const campgroundId = reviewFormElement.dataset.campgroundid;
 const baseUrl = `/campgrounds/${campgroundId}/reviews`;
 
 function createReview(data) {
+  const { body, rating } = data;
   const reviewElement = reviewTemplateElement.content.cloneNode(true);
-  reviewElement.firstElementChild.querySelector('p').textContent = data.body;
+
+  const cardTitleElement =
+    reviewElement.firstElementChild.querySelector('.card-title');
+  const cardTextElement =
+    reviewElement.firstElementChild.querySelector('.card-text');
+
+  cardTitleElement.textContent = `Rating: ${rating}`;
+  cardTextElement.textContent = `Review: ${body}`;
 
   reviewsListElement.appendChild(reviewElement);
 }
