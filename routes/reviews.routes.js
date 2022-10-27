@@ -8,6 +8,21 @@ const Review = require('../models/review.model');
 
 const router = express.Router({ mergeParams: true });
 
+router.get(
+  '/',
+  catchAsync(async (req, res, next) => {
+    const campgroundId = req.params.campId;
+    const campground = await Campground.findById(campgroundId);
+
+    await campground.populate('reviews');
+
+    res.json({
+      message: 'Reviews fetched successfully',
+      data: campground.reviews,
+    });
+  })
+);
+
 router.post(
   '/',
   validateReview,
@@ -25,7 +40,7 @@ router.post(
 
       await Promise.all([review.save(), campground.save()]);
 
-      res.json({ message: 'Review created successfully' });
+      res.json({ message: 'Review created successfully', data: review });
     } else {
       // Error comes from validateReview middleware
       const { statusCode, message } = req.error;
