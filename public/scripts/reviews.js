@@ -26,11 +26,15 @@ async function submitReview(event) {
     throw new Error('Something went wrong - could not create a review.');
   }
 
+  const responseData = await response.json();
+
   if (!response.ok) {
-    throw new Error('Something went wrong - could not create a review.');
+    throw new Error(responseData.message);
   }
 
-  const responseData = await response.json();
+  ratingInputElement.value = 3;
+  textTextareaElement.value = '';
+  reviewFormElement.classList.remove('was-validated');
 
   console.log(responseData);
 }

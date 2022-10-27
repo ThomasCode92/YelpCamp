@@ -1,6 +1,6 @@
 <form
-  id="review-form" class="mb-3"
-  data-campgroundid="<%= campground._id %>">
+  id="review-form" class="needs-validation mb-3"
+  data-campgroundid="<%= campground._id %>" novalidate>
   <div class="mb-3">
     <label class="form-label" for="rating">Rating</label>
     <input
@@ -12,7 +12,7 @@
     <label class="form-label" for="text">Review</label>
     <textarea
       class="form-control" id="text"
-      rows="3" name="review[text]"
+      rows="3" name="review[text]" required
     ></textarea>
   </div>
   <button class="btn btn-success">Submit</button>
