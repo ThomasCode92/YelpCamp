@@ -5,17 +5,46 @@ const reviewTemplateElement = document.getElementById('review-template');
 const campgroundId = reviewFormElement.dataset.campgroundid;
 const baseUrl = `/campgrounds/${campgroundId}/reviews`;
 
+async function deleteReview(event) {
+  const buttonElement = event.target;
+  const reviewId = buttonElement.dataset.id;
+
+  let response;
+
+  try {
+    response = await fetch(`${baseUrl}/${reviewId}`, {
+      method: 'DELETE',
+    });
+  } catch (error) {
+    throw new Error('Something went wrong - could not delete review.');
+  }
+
+  const responseData = await response.json();
+
+  if (!response.ok) {
+    throw new Error(responseData.message);
+  }
+
+  // Select & remove the review (via DOM traversal)
+  buttonElement.parentElement.parentElement.remove();
+}
+
 function createReview(data) {
-  const { body, rating } = data;
+  const { _id, body, rating } = data;
   const reviewElement = reviewTemplateElement.content.cloneNode(true);
 
   const cardTitleElement =
     reviewElement.firstElementChild.querySelector('.card-title');
   const cardTextElement =
     reviewElement.firstElementChild.querySelector('.card-text');
+  const deleteBtnElement =
+    reviewElement.firstElementChild.querySelector('button');
 
   cardTitleElement.textContent = `Rating: ${rating}`;
   cardTextElement.textContent = `Review: ${body}`;
+  deleteBtnElement.dataset.id = _id;
+
+  deleteBtnElement.addEventListener('click', deleteReview);
 
   reviewsListElement.appendChild(reviewElement);
 }

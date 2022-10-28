@@ -31,7 +31,7 @@ router.post('/', validateReview, async (req, res, next) => {
   const newReview = { body: text, rating: parseInt(rating, 10) };
 
   try {
-    if (req.error) throw req.error; // req.error is a ExpressError
+    if (req.error) throw req.error; // req.error is an ExpressError
 
     const campground = await Campground.findById(campgroundId);
     const review = new Review(newReview);
@@ -41,6 +41,25 @@ router.post('/', validateReview, async (req, res, next) => {
     await Promise.all([review.save(), campground.save()]);
 
     res.json({ message: 'Review created successfully', data: review });
+  } catch (error) {
+    console.log(error);
+
+    const { statusCode = 500, message = 'Something went wrong!' } = error;
+    res.status(statusCode).json({ message });
+  }
+});
+
+router.delete('/:id', async (req, res, next) => {
+  const campgroundId = req.params.campId;
+  const reviewId = req.params.id;
+
+  try {
+    await Review.findByIdAndDelete(reviewId);
+    await Campground.findByIdAndUpdate(campgroundId, {
+      $pull: { reviews: reviewId },
+    });
+
+    res.json({ message: 'Review deleted successfully' });
   } catch (error) {
     console.log(error);
 
