@@ -1,6 +1,9 @@
 const reviewFormElement = document.getElementById('review-form');
 const reviewsListElement = document.getElementById('reviews-list');
 const reviewTemplateElement = document.getElementById('review-template');
+const deleteBtnElements = document.querySelectorAll(
+  '.reviews-list-item button'
+);
 
 const campgroundId = reviewFormElement.dataset.campgroundid;
 const baseUrl = `/campgrounds/${campgroundId}/reviews`;
@@ -26,12 +29,14 @@ async function deleteReview(event) {
   }
 
   // Select & remove the review (via DOM traversal)
-  buttonElement.parentElement.parentElement.remove();
+  buttonElement.parentElement.parentElement.parentElement.remove();
 }
 
 function createReview(data) {
   const { _id, body, rating } = data;
+
   const reviewElement = reviewTemplateElement.content.cloneNode(true);
+  const listItemElement = document.createElement('li');
 
   const cardTitleElement =
     reviewElement.firstElementChild.querySelector('.card-title');
@@ -46,26 +51,9 @@ function createReview(data) {
 
   deleteBtnElement.addEventListener('click', deleteReview);
 
-  reviewsListElement.appendChild(reviewElement);
-}
-
-async function createReviews() {
-  let response;
-
-  try {
-    response = await fetch(baseUrl);
-  } catch (error) {
-    throw new Error('Something went wrong - could not fetch reviews.');
-  }
-
-  const responseData = await response.json();
-
-  if (!response.ok) {
-    throw new Error(responseData.message);
-  }
-
-  const reviews = responseData.data;
-  reviews.forEach(review => createReview(review));
+  listItemElement.classList.add('reviews-list-item');
+  listItemElement.appendChild(reviewElement);
+  reviewsListElement.appendChild(listItemElement);
 }
 
 async function submitReview(event) {
@@ -105,5 +93,8 @@ async function submitReview(event) {
   createReview(newReview);
 }
 
-createReviews();
 reviewFormElement.addEventListener('submit', submitReview);
+
+deleteBtnElements.forEach(btnElement => {
+  btnElement.addEventListener('click', deleteReview);
+});

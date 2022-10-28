@@ -7,23 +7,6 @@ const Review = require('../models/review.model');
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', async (req, res, next) => {
-  const campgroundId = req.params.campId;
-
-  try {
-    const campground = await Campground.findById(campgroundId);
-
-    await campground.populate('reviews');
-
-    res.json({
-      message: 'Reviews fetched successfully',
-      data: campground.reviews,
-    });
-  } catch (error) {
-    res.status(404).json({ message: 'Campground not found!' });
-  }
-});
-
 router.post('/', validateReview, async (req, res, next) => {
   const campgroundId = req.params.campId;
   const { rating, text } = req.body.review;

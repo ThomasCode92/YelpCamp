@@ -11,19 +11,15 @@
         </div>
         <div class="col-6">
           <h2>Leave a Review</h2>
-          <%- include('includes/review-form', { campground }) %>
-          <ul id="reviews-list" style="padding-left: 0;"></ul>
-          <template id="review-template">
-            <div class="card mb-3">
-              <div class="card-body">
-                <h5 class="card-title"></h5>
-                <p class="card-text"></p>
-                <button class="btn btn-sm btn-danger">
-                  Delete
-                </button>
-              </div>
-            </div>
-          </template>
+          <%- include('includes/review-form', { campground }) %>          
+          <ul id="reviews-list" style="padding-left: 0;">
+            <% campground.reviews.forEach(review => { %>
+              <li class="reviews-list-item">
+                <%- include('includes/review-card', { review }) %>
+              </li>
+            <% }) %>
+          </ul>
+          <%- include('includes/review-template') %>          
         </div>
       </div>     
     </main>

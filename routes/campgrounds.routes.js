@@ -24,6 +24,9 @@ router.get(
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
+
+    await campground.populate('reviews');
+
     res.render('campgrounds/campground-details', { campground });
   })
 );
