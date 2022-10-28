@@ -1,4 +1,4 @@
-body{
+body {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -6,4 +6,8 @@ body{
 
 main {
   margin-top: 3rem;
+}
+
+li {
+  list-style: none;
 }
