@@ -1,7 +1,9 @@
 const express = require('express');
 
-const validateCampground = require('../middleware/validate-campground');
+const { flashDataToSession } = require('../util/session-flash');
 const catchAsync = require('../util/catchAsync');
+
+const validateCampground = require('../middleware/validate-campground');
 
 const Campground = require('../models/campground.model');
 
@@ -25,9 +27,20 @@ router.get(
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
 
-    await campground.populate('reviews');
+    if (!campground) {
+      const flashData = {
+        status: 'error',
+        message: 'Cannot find requested campground!',
+      };
 
-    res.render('campgrounds/campground-details', { campground });
+      flashDataToSession(req, flashData, () => {
+        res.redirect(`/campgrounds`);
+      });
+    } else {
+      await campground.populate('reviews');
+
+      res.render('campgrounds/campground-details', { campground });
+    }
   })
 );
 
@@ -36,7 +49,19 @@ router.get(
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
-    res.render('campgrounds/update-campground', { campground });
+
+    if (!campground) {
+      const flashData = {
+        status: 'error',
+        message: 'Cannot find requested campground!',
+      };
+
+      flashDataToSession(req, flashData, () => {
+        res.redirect(`/campgrounds`);
+      });
+    } else {
+      res.render('campgrounds/update-campground', { campground });
+    }
   })
 );
 
@@ -51,7 +76,14 @@ router.post(
 
     await campground.save();
 
-    res.redirect(`/campgrounds/${campground._id}`);
+    const flashData = {
+      status: 'success',
+      message: 'Successfully created a new campground!',
+    };
+
+    flashDataToSession(req, flashData, () => {
+      res.redirect(`/campgrounds/${campground._id}`);
+    });
   })
 );
 
@@ -65,7 +97,15 @@ router.put(
     const campgroundData = { title, location, image, price, description };
 
     await Campground.findByIdAndUpdate(campgroundId, campgroundData);
-    res.redirect(`/campgrounds/${campgroundId}`);
+
+    const flashData = {
+      status: 'success',
+      message: 'Successfully updated this campground!',
+    };
+
+    flashDataToSession(req, flashData, () => {
+      res.redirect(`/campgrounds/${campgroundId}`);
+    });
   })
 );
 
@@ -73,8 +113,17 @@ router.delete(
   '/:id',
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
+
     await Campground.findByIdAndDelete(campgroundId);
-    res.redirect('/campgrounds');
+
+    const flashData = {
+      status: 'success',
+      message: 'Successfully deleted a campground!',
+    };
+
+    flashDataToSession(req, flashData, () => {
+      res.redirect('/campgrounds');
+    });
   })
 );
 
