@@ -1,7 +1,9 @@
 const express = require('express');
 
-const validateCampground = require('../middleware/validate-campground');
+const { flashDataToSession } = require('../util/session-flash');
 const catchAsync = require('../util/catchAsync');
+
+const validateCampground = require('../middleware/validate-campground');
 
 const Campground = require('../models/campground.model');
 
@@ -51,7 +53,14 @@ router.post(
 
     await campground.save();
 
-    res.redirect(`/campgrounds/${campground._id}`);
+    const flashData = {
+      status: 'success',
+      message: 'Successfully created a new campground',
+    };
+
+    flashDataToSession(req, flashData, () => {
+      res.redirect(`/campgrounds/${campground._id}`);
+    });
   })
 );
 

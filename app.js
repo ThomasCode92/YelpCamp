@@ -8,6 +8,8 @@ const expressSession = require('express-session');
 const createSessionConfig = require('./config/session');
 const ExpressError = require('./util/ExpressError');
 
+const sessionFlash = require('./middleware/session-flash');
+
 const campgroundsRoutes = require('./routes/campgrounds.routes');
 const reviewsRoutes = require('./routes/reviews.routes');
 
@@ -25,6 +27,8 @@ app.use(express.json());
 app.use(expressSession(sessionConfig)); // Create the Express Session
 
 app.use(methodOverride('_method')); // Override POST requests having _method in the query string
+
+app.use(sessionFlash);
 
 app.use('/campgrounds', campgroundsRoutes);
 app.use('/campgrounds/:campId/reviews', reviewsRoutes);
