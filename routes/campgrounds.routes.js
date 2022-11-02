@@ -55,7 +55,7 @@ router.post(
 
     const flashData = {
       status: 'success',
-      message: 'Successfully created a new campground',
+      message: 'Successfully created a new campground!',
     };
 
     flashDataToSession(req, flashData, () => {
@@ -74,7 +74,15 @@ router.put(
     const campgroundData = { title, location, image, price, description };
 
     await Campground.findByIdAndUpdate(campgroundId, campgroundData);
-    res.redirect(`/campgrounds/${campgroundId}`);
+
+    const flashData = {
+      status: 'success',
+      message: 'Successfully updated this campground!',
+    };
+
+    flashDataToSession(req, flashData, () => {
+      res.redirect(`/campgrounds/${campgroundId}`);
+    });
   })
 );
 
@@ -82,8 +90,17 @@ router.delete(
   '/:id',
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
+
     await Campground.findByIdAndDelete(campgroundId);
-    res.redirect('/campgrounds');
+
+    const flashData = {
+      status: 'success',
+      message: 'Successfully deleted a campground!',
+    };
+
+    flashDataToSession(req, flashData, () => {
+      res.redirect('/campgrounds');
+    });
   })
 );
 
