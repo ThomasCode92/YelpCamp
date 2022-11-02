@@ -27,9 +27,20 @@ router.get(
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
 
-    await campground.populate('reviews');
+    if (!campground) {
+      const flashData = {
+        status: 'error',
+        message: 'Cannot find requested campground!',
+      };
 
-    res.render('campgrounds/campground-details', { campground });
+      flashDataToSession(req, flashData, () => {
+        res.redirect(`/campgrounds`);
+      });
+    } else {
+      await campground.populate('reviews');
+
+      res.render('campgrounds/campground-details', { campground });
+    }
   })
 );
 
@@ -38,7 +49,19 @@ router.get(
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
-    res.render('campgrounds/update-campground', { campground });
+
+    if (!campground) {
+      const flashData = {
+        status: 'error',
+        message: 'Cannot find requested campground!',
+      };
+
+      flashDataToSession(req, flashData, () => {
+        res.redirect(`/campgrounds`);
+      });
+    } else {
+      res.render('campgrounds/update-campground', { campground });
+    }
   })
 );
 
