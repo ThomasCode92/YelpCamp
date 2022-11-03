@@ -4,11 +4,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const expressSession = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
 const createSessionConfig = require('./config/session');
 const ExpressError = require('./util/ExpressError');
 
 const sessionFlash = require('./middleware/session-flash');
+
+const User = require('./models/user.model');
 
 const campgroundsRoutes = require('./routes/campgrounds.routes');
 const reviewsRoutes = require('./routes/reviews.routes');
@@ -25,6 +29,14 @@ app.use(express.urlencoded({ extended: true })); // Parse incoming request bodie
 app.use(express.json());
 
 app.use(expressSession(sessionConfig)); // Create the Express Session
+
+// Passport Setup & Configuration - (Local Strategy)
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use(methodOverride('_method')); // Override POST requests having _method in the query string
 
