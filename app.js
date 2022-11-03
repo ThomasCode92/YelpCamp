@@ -14,6 +14,7 @@ const sessionFlash = require('./middleware/session-flash');
 
 const User = require('./models/user.model');
 
+const authRoutes = require('./routes/auth.routes');
 const campgroundsRoutes = require('./routes/campgrounds.routes');
 const reviewsRoutes = require('./routes/reviews.routes');
 
@@ -42,6 +43,7 @@ app.use(methodOverride('_method')); // Override POST requests having _method in 
 
 app.use(sessionFlash);
 
+app.use('/auth', authRoutes);
 app.use('/campgrounds', campgroundsRoutes);
 app.use('/campgrounds/:campId/reviews', reviewsRoutes);
 

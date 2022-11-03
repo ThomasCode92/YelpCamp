@@ -1,0 +1,34 @@
+<form
+  action="/auth/register" method="POST"
+  class="needs-validation" novalidate>
+  <div class="mb-3">
+    <label class="form-label" for="username">Username</label>
+    <input
+      class="form-control" id="username"
+      type="text" name="auth[username]" required />
+    <div class="invalid-feedback">
+      Please choose a username!
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="email">Email</label>
+    <input
+      class="form-control" id="email"
+      type="email" name="auth[email]" required />
+    <div class="invalid-feedback">
+      Please choose an email address!
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="password">Password</label>
+    <input
+      class="form-control" id="password"
+      type="password" name="auth[password]" required />
+    <div class="invalid-feedback">
+      Please choose a password!
+    </div>
+  </div>
+  <button class="btn btn-success">
+    Register
+  </button>
+</form>
