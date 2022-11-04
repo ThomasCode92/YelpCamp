@@ -97,21 +97,35 @@ router.put(
   protectRoute,
   validateCampground,
   catchAsync(async (req, res, next) => {
+    const userId = req.user._id;
     const campgroundId = req.params.id;
     const { title, location, image, price, description } = req.body.campground;
 
     const campgroundData = { title, location, image, price, description };
 
-    await Campground.findByIdAndUpdate(campgroundId, campgroundData);
+    const campground = await Campground.findById(campgroundId);
 
-    const flashData = {
-      status: 'success',
-      message: 'Successfully updated this campground!',
-    };
+    if (campground.author.equals(userId)) {
+      // Update Campground...
 
-    flashDataToSession(req, flashData, () => {
-      res.redirect(`/campgrounds/${campgroundId}`);
-    });
+      const flashData = {
+        status: 'success',
+        message: 'Successfully updated this campground!',
+      };
+
+      flashDataToSession(req, flashData, () => {
+        res.redirect(`/campgrounds/${campgroundId}`);
+      });
+    } else {
+      const flashData = {
+        status: 'error',
+        message: 'You do not have permission to do that!',
+      };
+
+      flashDataToSession(req, flashData, () => {
+        res.redirect(`/campgrounds/${campgroundId}`);
+      });
+    }
   })
 );
 
