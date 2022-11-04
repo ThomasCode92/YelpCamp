@@ -10,6 +10,7 @@ const LocalStrategy = require('passport-local');
 const createSessionConfig = require('./config/session');
 const ExpressError = require('./util/ExpressError');
 
+const checkAuthStatus = require('./middleware/check-auth');
 const sessionFlash = require('./middleware/session-flash');
 
 const User = require('./models/user.model');
@@ -41,6 +42,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(methodOverride('_method')); // Override POST requests having _method in the query string
 
+app.use(checkAuthStatus);
 app.use(sessionFlash);
 
 app.use('/auth', authRoutes);
