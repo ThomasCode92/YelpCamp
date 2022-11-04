@@ -2,6 +2,8 @@ const express = require('express');
 
 const { flashDataToSession } = require('../util/session-flash');
 
+const authenticate = require('../middleware/authenticate');
+
 const User = require('../models/user.model');
 
 const router = express.Router();
@@ -36,6 +38,21 @@ router.post('/register', async (req, res, next) => {
       res.redirect('/auth/register');
     });
   }
+});
+
+router.get('/login', (req, res, next) => {
+  res.render('auth/login');
+});
+
+router.post('/login', authenticate, (req, res, next) => {
+  const flashData = {
+    status: 'success',
+    message: 'Welcome back to YelpCamp!',
+  };
+
+  flashDataToSession(req, flashData, () => {
+    res.redirect('/campgrounds');
+  });
 });
 
 module.exports = router;
