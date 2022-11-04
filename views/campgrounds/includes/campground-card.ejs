@@ -9,14 +9,16 @@
     <li class="list-group-item"><%= campground.author.username %></li>
     <li class="list-group-item">$<%= campground.price %>/night</li>
   </ul>
-  <div class="card-body">
-    <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning card-link">Edit</a>
-    <form
-      action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST"
-      class="d-inline">
-      <button class="btn btn-danger">Delete</button>
-    </form>
-  </div>
+  <% if (user && campground.author.equals(user._id)) { %>
+    <div class="card-body">
+      <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-warning card-link">Edit</a>
+      <form
+        action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST"
+        class="d-inline">
+        <button class="btn btn-danger">Delete</button>
+      </form>
+    </div>   
+  <% } %>
   <footer class="card-footer">
     <a href="/campgrounds">All Campgrounds</a>
   </footer>
