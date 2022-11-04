@@ -26,9 +26,13 @@ router.get(
   '/:id',
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
-    const campground = await Campground.findById(campgroundId);
+    const campground = await Campground.findById(campgroundId)
+      .populate('author')
+      .populate('reviews');
 
-    if (!campground) {
+    if (campground) {
+      res.render('campgrounds/campground-details', { campground });
+    } else {
       const flashData = {
         status: 'error',
         message: 'Cannot find requested campground!',
@@ -37,10 +41,6 @@ router.get(
       flashDataToSession(req, flashData, () => {
         res.redirect(`/campgrounds`);
       });
-    } else {
-      await campground.populate('reviews');
-
-      res.render('campgrounds/campground-details', { campground });
     }
   })
 );
@@ -73,10 +73,12 @@ router.post(
   validateCampground,
   catchAsync(async (req, res) => {
     const { title, location, image, price, description } = req.body.campground;
+    const userId = req.user._id;
 
     const campgroundData = { title, location, image, price, description };
     const campground = new Campground(campgroundData);
 
+    campground.author = userId;
     await campground.save();
 
     const flashData = {
