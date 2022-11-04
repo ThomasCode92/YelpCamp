@@ -18,15 +18,21 @@ router.post('/register', async (req, res, next) => {
   const user = new User({ username, email });
 
   try {
-    await User.register(user, password);
+    const registeredUser = await User.register(user, password);
 
-    const flashData = {
-      status: 'success',
-      message: 'Welcome to YelpCamp!',
-    };
+    req.login(registeredUser, error => {
+      if (!error) {
+        const flashData = {
+          status: 'success',
+          message: 'Welcome to YelpCamp!',
+        };
 
-    flashDataToSession(req, flashData, () => {
-      res.redirect('/campgrounds');
+        flashDataToSession(req, flashData, () => {
+          res.redirect('/campgrounds');
+        });
+      } else {
+        next(error);
+      }
     });
   } catch (error) {
     const flashData = {
