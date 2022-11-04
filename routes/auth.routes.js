@@ -51,13 +51,15 @@ router.get('/login', (req, res, next) => {
 });
 
 router.post('/login', authenticate, (req, res, next) => {
+  const redirectUrl = req.session.returnToUrl || '/campgrounds';
+
   const flashData = {
     status: 'success',
     message: 'Welcome back to YelpCamp!',
   };
 
   flashDataToSession(req, flashData, () => {
-    res.redirect('/campgrounds');
+    res.redirect(redirectUrl);
   });
 });
 
