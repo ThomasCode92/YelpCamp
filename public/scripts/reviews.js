@@ -33,19 +33,22 @@ async function deleteReview(event) {
 }
 
 function createReview(data) {
-  const { _id, body, rating } = data;
+  const { _id, body, rating, author } = data;
 
   const reviewElement = reviewTemplateElement.content.cloneNode(true);
   const listItemElement = document.createElement('li');
 
   const cardTitleElement =
     reviewElement.firstElementChild.querySelector('.card-title');
+  const cardSubTitleElement =
+    reviewElement.firstElementChild.querySelector('.card-sub-title');
   const cardTextElement =
     reviewElement.firstElementChild.querySelector('.card-text');
   const deleteBtnElement =
     reviewElement.firstElementChild.querySelector('button');
 
   cardTitleElement.textContent = `Rating: ${rating}`;
+  cardSubTitleElement.textContent = `By ${author.username}`;
   cardTextElement.textContent = `Review: ${body}`;
   deleteBtnElement.dataset.id = _id;
 

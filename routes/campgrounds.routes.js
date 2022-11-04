@@ -5,6 +5,7 @@ const catchAsync = require('../util/catchAsync');
 
 const validateCampground = require('../middleware/validate-campground');
 const protectRoute = require('../middleware/protect-route');
+const { isCampgroundAuthor } = require('../middleware/is-author');
 
 const Campground = require('../models/campground.model');
 
@@ -26,9 +27,13 @@ router.get(
   '/:id',
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
-    const campground = await Campground.findById(campgroundId);
+    const campground = await Campground.findById(campgroundId)
+      .populate('author')
+      .populate({ path: 'reviews', populate: { path: 'author' } });
 
-    if (!campground) {
+    if (campground) {
+      res.render('campgrounds/campground-details', { campground });
+    } else {
       const flashData = {
         status: 'error',
         message: 'Cannot find requested campground!',
@@ -37,10 +42,6 @@ router.get(
       flashDataToSession(req, flashData, () => {
         res.redirect(`/campgrounds`);
       });
-    } else {
-      await campground.populate('reviews');
-
-      res.render('campgrounds/campground-details', { campground });
     }
   })
 );
@@ -48,6 +49,7 @@ router.get(
 router.get(
   '/:id/edit',
   protectRoute,
+  isCampgroundAuthor,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
@@ -73,10 +75,12 @@ router.post(
   validateCampground,
   catchAsync(async (req, res) => {
     const { title, location, image, price, description } = req.body.campground;
+    const userId = req.user._id;
 
     const campgroundData = { title, location, image, price, description };
     const campground = new Campground(campgroundData);
 
+    campground.author = userId;
     await campground.save();
 
     const flashData = {
@@ -93,6 +97,7 @@ router.post(
 router.put(
   '/:id',
   protectRoute,
+  isCampgroundAuthor,
   validateCampground,
   catchAsync(async (req, res, next) => {
     const campgroundId = req.params.id;
@@ -116,6 +121,7 @@ router.put(
 router.delete(
   '/:id',
   protectRoute,
+  isCampgroundAuthor,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
 

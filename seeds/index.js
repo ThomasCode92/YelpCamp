@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+const User = require('../models/user.model');
 const Campground = require('../models/campground.model');
 
 const citiesData = require('./cities.json');
@@ -10,7 +11,11 @@ const getRandomElement = array =>
   array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
+  await User.deleteMany();
   await Campground.deleteMany();
+
+  const user = new User({ username: 'John Doe', email: 'john.doe@gmail.com' });
+  const registeredUser = await User.register(user, 'johndoe');
 
   const campgrounds = [];
 
@@ -33,6 +38,7 @@ const seedDB = async () => {
       price: randomPrice,
       location,
       description,
+      author: registeredUser._id,
     });
 
     campgrounds.push(campground.save());
