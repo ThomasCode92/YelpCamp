@@ -4,6 +4,7 @@ const { flashDataToSession } = require('../util/session-flash');
 const catchAsync = require('../util/catchAsync');
 
 const validateCampground = require('../middleware/validate-campground');
+const protectRoute = require('../middleware/protect-route');
 
 const Campground = require('../models/campground.model');
 
@@ -17,7 +18,7 @@ router.get(
   })
 );
 
-router.get('/new', (req, res) => {
+router.get('/new', protectRoute, (req, res) => {
   res.render('campgrounds/new-campground');
 });
 
@@ -46,6 +47,7 @@ router.get(
 
 router.get(
   '/:id/edit',
+  protectRoute,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
@@ -67,6 +69,7 @@ router.get(
 
 router.post(
   '/',
+  protectRoute,
   validateCampground,
   catchAsync(async (req, res) => {
     const { title, location, image, price, description } = req.body.campground;
@@ -89,6 +92,7 @@ router.post(
 
 router.put(
   '/:id',
+  protectRoute,
   validateCampground,
   catchAsync(async (req, res, next) => {
     const campgroundId = req.params.id;
@@ -111,6 +115,7 @@ router.put(
 
 router.delete(
   '/:id',
+  protectRoute,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
 

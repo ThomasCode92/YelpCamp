@@ -18,6 +18,20 @@
           <a class="nav-link" href="/campgrounds/new">New Campground</a>
         </li>
       </ul>
+      <ul class="navbar-nav ms-auto">
+        <% if (!locals.user) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/register">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/login">Login</a>
+          </li>         
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/logout">Logout</a>
+          </li>
+        <% } %>
+      </ul>
     </div>
   </div>
 </nav>
