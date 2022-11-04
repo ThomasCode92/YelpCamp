@@ -1,8 +1,9 @@
 const { flashDataToSession } = require('../util/session-flash');
 
 const Campground = require('../models/campground.model');
+const Review = require('../models/review.model');
 
-async function isAuthor(req, res, next) {
+async function isCampgroundAuthor(req, res, next) {
   const userId = req.user._id;
   const campgroundId = req.params.id;
 
@@ -22,4 +23,20 @@ async function isAuthor(req, res, next) {
   }
 }
 
-module.exports = isAuthor;
+async function isReviewAuthor(req, res, next) {
+  const userId = req.user._id;
+  const reviewId = req.params.id;
+
+  const review = await Review.findById(reviewId);
+
+  if (!review.author.equals(userId)) {
+    const error = new Error('Not authorized!');
+    error.statusCode = 403;
+
+    req.error = error;
+  }
+
+  next();
+}
+
+module.exports = { isCampgroundAuthor, isReviewAuthor };

@@ -12,8 +12,10 @@
           <%- include('includes/campground-card', { campground }) %>
         </div>
         <div class="col-6">
-          <h2>Leave a Review</h2>
-          <%- include('includes/review-form', { campground }) %>          
+          <% if (locals.user) { %>
+            <h2>Leave a Review</h2>
+            <%- include('includes/review-form', { campground }) %>           
+          <% } %>
           <ul id="reviews-list" style="padding-left: 0;">
             <% campground.reviews.forEach(review => { %>
               <li class="reviews-list-item">

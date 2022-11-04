@@ -1,11 +1,14 @@
 <div class="card mb-3">
   <div class="card-body">
     <h5 class="card-title">Rating: <%= review.rating %></h5>
+    <h6 class="card-sub-title">By <%= review.author.username %></h6>
     <p class="card-text">Review: <%= review.body %></p>
-    <button
-      class="btn btn-sm btn-danger"
-      data-id="<%= review._id %>">
-      Delete
-    </button>
+    <% if (locals.user && review.author.equals(user._id)) { %>
+      <button
+        class="btn btn-sm btn-danger"
+        data-id="<%= review._id %>">
+        Delete
+      </button>     
+    <% } %>
   </div>
 </div>

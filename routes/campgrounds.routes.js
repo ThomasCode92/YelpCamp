@@ -5,7 +5,7 @@ const catchAsync = require('../util/catchAsync');
 
 const validateCampground = require('../middleware/validate-campground');
 const protectRoute = require('../middleware/protect-route');
-const isAuthor = require('../middleware/is-author');
+const { isCampgroundAuthor } = require('../middleware/is-author');
 
 const Campground = require('../models/campground.model');
 
@@ -29,7 +29,7 @@ router.get(
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId)
       .populate('author')
-      .populate('reviews');
+      .populate({ path: 'reviews', populate: { path: 'author' } });
 
     if (campground) {
       res.render('campgrounds/campground-details', { campground });
@@ -49,7 +49,7 @@ router.get(
 router.get(
   '/:id/edit',
   protectRoute,
-  isAuthor,
+  isCampgroundAuthor,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
@@ -97,7 +97,7 @@ router.post(
 router.put(
   '/:id',
   protectRoute,
-  isAuthor,
+  isCampgroundAuthor,
   validateCampground,
   catchAsync(async (req, res, next) => {
     const campgroundId = req.params.id;
@@ -121,7 +121,7 @@ router.put(
 router.delete(
   '/:id',
   protectRoute,
-  isAuthor,
+  isCampgroundAuthor,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
 
