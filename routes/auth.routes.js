@@ -55,4 +55,19 @@ router.post('/login', authenticate, (req, res, next) => {
   });
 });
 
+router.get('/logout', (req, res, next) => {
+  req.logout(error => {
+    if (error) return next(error);
+
+    const flashData = {
+      status: 'success',
+      message: 'Goodbye!',
+    };
+
+    return flashDataToSession(req, flashData, () => {
+      res.redirect('/campgrounds');
+    });
+  });
+});
+
 module.exports = router;
