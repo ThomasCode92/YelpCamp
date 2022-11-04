@@ -5,6 +5,7 @@ const catchAsync = require('../util/catchAsync');
 
 const validateCampground = require('../middleware/validate-campground');
 const protectRoute = require('../middleware/protect-route');
+const isAuthor = require('../middleware/is-author');
 
 const Campground = require('../models/campground.model');
 
@@ -48,6 +49,7 @@ router.get(
 router.get(
   '/:id/edit',
   protectRoute,
+  isAuthor,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
     const campground = await Campground.findById(campgroundId);
@@ -95,43 +97,31 @@ router.post(
 router.put(
   '/:id',
   protectRoute,
+  isAuthor,
   validateCampground,
   catchAsync(async (req, res, next) => {
-    const userId = req.user._id;
     const campgroundId = req.params.id;
     const { title, location, image, price, description } = req.body.campground;
 
     const campgroundData = { title, location, image, price, description };
 
-    const campground = await Campground.findById(campgroundId);
+    await Campground.findByIdAndUpdate(campgroundId, campgroundData);
 
-    if (campground.author.equals(userId)) {
-      // Update Campground...
+    const flashData = {
+      status: 'success',
+      message: 'Successfully updated this campground!',
+    };
 
-      const flashData = {
-        status: 'success',
-        message: 'Successfully updated this campground!',
-      };
-
-      flashDataToSession(req, flashData, () => {
-        res.redirect(`/campgrounds/${campgroundId}`);
-      });
-    } else {
-      const flashData = {
-        status: 'error',
-        message: 'You do not have permission to do that!',
-      };
-
-      flashDataToSession(req, flashData, () => {
-        res.redirect(`/campgrounds/${campgroundId}`);
-      });
-    }
+    flashDataToSession(req, flashData, () => {
+      res.redirect(`/campgrounds/${campgroundId}`);
+    });
   })
 );
 
 router.delete(
   '/:id',
   protectRoute,
+  isAuthor,
   catchAsync(async (req, res) => {
     const campgroundId = req.params.id;
 
