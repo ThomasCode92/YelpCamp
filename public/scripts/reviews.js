@@ -47,9 +47,9 @@ function createReview(data) {
   const deleteBtnElement =
     reviewElement.firstElementChild.querySelector('button');
 
-  cardTitleElement.textContent = `Rating: ${rating}`;
   cardSubTitleElement.textContent = `By ${author.username}`;
   cardTextElement.textContent = `Review: ${body}`;
+  cardTitleElement.dataset.rating = rating;
   deleteBtnElement.dataset.id = _id;
 
   deleteBtnElement.addEventListener('click', deleteReview);
@@ -62,7 +62,9 @@ function createReview(data) {
 async function submitReview(event) {
   event.preventDefault();
 
-  const ratingInputElement = reviewFormElement.querySelector('input');
+  const INPUT_SELECTOR = 'input[name="rating"]:checked';
+
+  const ratingInputElement = reviewFormElement.querySelector(INPUT_SELECTOR);
   const textTextareaElement = reviewFormElement.querySelector('textarea');
 
   const rating = ratingInputElement.value;

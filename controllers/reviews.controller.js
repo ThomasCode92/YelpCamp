@@ -5,6 +5,8 @@ async function createReview(req, res, next) {
   const campgroundId = req.params.campId;
   const { rating, text } = req.body.review;
 
+  console.log(rating, text);
+
   const newReview = { body: text, rating: parseInt(rating, 10) };
 
   try {
