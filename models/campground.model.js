@@ -11,10 +11,10 @@ async function deleteReviews(doc) {
 
 const CampgroundSchema = new Schema({
   title: String,
-  image: String,
   price: Number,
   description: String,
   location: String,
+  images: [{ url: String, filename: String }],
   reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
   author: { type: Schema.Types.ObjectId, ref: 'User' },
 });

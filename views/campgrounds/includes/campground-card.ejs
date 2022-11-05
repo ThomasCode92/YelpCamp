@@ -1,5 +1,7 @@
 <div class="card mb-3">
-  <img class="card-img-top" src="<%= campground.image %>" alt="<%= campground.title %>">
+  <% for (let image of campground.images) { %>
+    <img class="card-img-top" src="<%= image.url %>" alt="<%= campground.title %>">
+  <% } %>
   <div class="card-body">
     <h5 class="card-title"><%= campground.title %></h5>
     <p class="card-text"><%= campground.description %></p>

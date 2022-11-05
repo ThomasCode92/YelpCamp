@@ -32,13 +32,20 @@ function getNewCampground(req, res) {
 }
 
 async function postNewCampground(req, res) {
-  const { title, location, image, price, description } = req.body.campground;
+  const { title, location, price, description } = req.body.campground;
+  const { files } = req;
   const userId = req.user._id;
 
-  const campgroundData = { title, location, image, price, description };
+  const images = files.map(file => ({
+    url: file.path,
+    filename: file.filename,
+  }));
+
+  const campgroundData = { title, location, price, description };
   const campground = new Campground(campgroundData);
 
   campground.author = userId;
+  campground.images = images;
   await campground.save();
 
   const flashData = {
