@@ -12,13 +12,9 @@ const {
 
 const router = express.Router();
 
-router.get('/register', getRegister);
+router.route('/register').get(getRegister).post(postRegister);
 
-router.post('/register', postRegister);
-
-router.get('/login', getLogin);
-
-router.post('/login', authenticate, postLogin);
+router.route('/login').get(getLogin).post(authenticate, postLogin);
 
 router.get('/logout', logout);
 

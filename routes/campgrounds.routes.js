@@ -18,39 +18,29 @@ const {
 
 const router = express.Router();
 
-router.get('/', catchAsync(getAllCampgrounds));
+router
+  .route('/')
+  .get(catchAsync(getAllCampgrounds))
+  .post(protectRoute, validateCampground, catchAsync(postNewCampground));
 
 router.get('/new', protectRoute, getNewCampground);
 
-router.get('/:id', catchAsync(getCampground));
+router
+  .route('/:id')
+  .get(catchAsync(getCampground))
+  .put(
+    protectRoute,
+    isCampgroundAuthor,
+    validateCampground,
+    catchAsync(editCampground)
+  )
+  .delete(protectRoute, isCampgroundAuthor, catchAsync(deleteCampground));
 
 router.get(
   '/:id/edit',
   protectRoute,
   isCampgroundAuthor,
   catchAsync(getEditCampground)
-);
-
-router.post(
-  '/',
-  protectRoute,
-  validateCampground,
-  catchAsync(postNewCampground)
-);
-
-router.put(
-  '/:id',
-  protectRoute,
-  isCampgroundAuthor,
-  validateCampground,
-  catchAsync(editCampground)
-);
-
-router.delete(
-  '/:id',
-  protectRoute,
-  isCampgroundAuthor,
-  catchAsync(deleteCampground)
 );
 
 module.exports = router;
