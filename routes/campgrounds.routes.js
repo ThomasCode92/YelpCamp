@@ -1,97 +1,41 @@
 const express = require('express');
 
-const { flashDataToSession } = require('../util/session-flash');
 const catchAsync = require('../util/catchAsync');
 
 const validateCampground = require('../middleware/validate-campground');
 const protectRoute = require('../middleware/protect-route');
 const { isCampgroundAuthor } = require('../middleware/is-author');
 
-const Campground = require('../models/campground.model');
+const {
+  getAllCampgrounds,
+  getCampground,
+  getNewCampground,
+  postNewCampground,
+  getEditCampground,
+  editCampground,
+  deleteCampground,
+} = require('../controllers/campgrounds.controller');
 
 const router = express.Router();
 
-router.get(
-  '/',
-  catchAsync(async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', { campgrounds });
-  })
-);
+router.get('/', catchAsync(getAllCampgrounds));
 
-router.get('/new', protectRoute, (req, res) => {
-  res.render('campgrounds/new-campground');
-});
+router.get('/new', protectRoute, getNewCampground);
 
-router.get(
-  '/:id',
-  catchAsync(async (req, res) => {
-    const campgroundId = req.params.id;
-    const campground = await Campground.findById(campgroundId)
-      .populate('author')
-      .populate({ path: 'reviews', populate: { path: 'author' } });
-
-    if (campground) {
-      res.render('campgrounds/campground-details', { campground });
-    } else {
-      const flashData = {
-        status: 'error',
-        message: 'Cannot find requested campground!',
-      };
-
-      flashDataToSession(req, flashData, () => {
-        res.redirect(`/campgrounds`);
-      });
-    }
-  })
-);
+router.get('/:id', catchAsync(getCampground));
 
 router.get(
   '/:id/edit',
   protectRoute,
   isCampgroundAuthor,
-  catchAsync(async (req, res) => {
-    const campgroundId = req.params.id;
-    const campground = await Campground.findById(campgroundId);
-
-    if (!campground) {
-      const flashData = {
-        status: 'error',
-        message: 'Cannot find requested campground!',
-      };
-
-      flashDataToSession(req, flashData, () => {
-        res.redirect(`/campgrounds`);
-      });
-    } else {
-      res.render('campgrounds/update-campground', { campground });
-    }
-  })
+  catchAsync(getEditCampground)
 );
 
 router.post(
   '/',
   protectRoute,
   validateCampground,
-  catchAsync(async (req, res) => {
-    const { title, location, image, price, description } = req.body.campground;
-    const userId = req.user._id;
-
-    const campgroundData = { title, location, image, price, description };
-    const campground = new Campground(campgroundData);
-
-    campground.author = userId;
-    await campground.save();
-
-    const flashData = {
-      status: 'success',
-      message: 'Successfully created a new campground!',
-    };
-
-    flashDataToSession(req, flashData, () => {
-      res.redirect(`/campgrounds/${campground._id}`);
-    });
-  })
+  catchAsync(postNewCampground)
 );
 
 router.put(
@@ -99,43 +43,14 @@ router.put(
   protectRoute,
   isCampgroundAuthor,
   validateCampground,
-  catchAsync(async (req, res, next) => {
-    const campgroundId = req.params.id;
-    const { title, location, image, price, description } = req.body.campground;
-
-    const campgroundData = { title, location, image, price, description };
-
-    await Campground.findByIdAndUpdate(campgroundId, campgroundData);
-
-    const flashData = {
-      status: 'success',
-      message: 'Successfully updated this campground!',
-    };
-
-    flashDataToSession(req, flashData, () => {
-      res.redirect(`/campgrounds/${campgroundId}`);
-    });
-  })
+  catchAsync(editCampground)
 );
 
 router.delete(
   '/:id',
   protectRoute,
   isCampgroundAuthor,
-  catchAsync(async (req, res) => {
-    const campgroundId = req.params.id;
-
-    await Campground.findByIdAndDelete(campgroundId);
-
-    const flashData = {
-      status: 'success',
-      message: 'Successfully deleted a campground!',
-    };
-
-    flashDataToSession(req, flashData, () => {
-      res.redirect('/campgrounds');
-    });
-  })
+  catchAsync(deleteCampground)
 );
 
 module.exports = router;
