@@ -78,11 +78,24 @@ async function getEditCampground(req, res) {
 
 async function editCampground(req, res, next) {
   const campgroundId = req.params.id;
-  const { title, location, image, price, description } = req.body.campground;
+  const { title, location, price, description } = req.body.campground;
+  const { files } = req;
 
-  const campgroundData = { title, location, image, price, description };
+  const images = files.map(file => ({
+    url: file.path,
+    filename: file.filename,
+  }));
 
-  await Campground.findByIdAndUpdate(campgroundId, campgroundData);
+  const campgroundData = { title, location, price, description };
+
+  const campground = await Campground.findByIdAndUpdate(
+    campgroundId,
+    campgroundData
+  );
+
+  campground.images.push(...images);
+
+  await campground.save();
 
   const flashData = {
     status: 'success',

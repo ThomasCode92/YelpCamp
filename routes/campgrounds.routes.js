@@ -5,7 +5,7 @@ const catchAsync = require('../util/catchAsync');
 const validateCampground = require('../middleware/validate-campground');
 const protectRoute = require('../middleware/protect-route');
 const { isCampgroundAuthor } = require('../middleware/is-author');
-const uploadImage = require('../middleware/image-upload');
+const imageUpload = require('../middleware/image-upload');
 
 const {
   getAllCampgrounds,
@@ -24,7 +24,7 @@ router
   .get(catchAsync(getAllCampgrounds))
   .post(
     protectRoute,
-    uploadImage,
+    imageUpload,
     validateCampground,
     catchAsync(postNewCampground)
   );
@@ -37,6 +37,7 @@ router
   .put(
     protectRoute,
     isCampgroundAuthor,
+    imageUpload,
     validateCampground,
     catchAsync(editCampground)
   )
