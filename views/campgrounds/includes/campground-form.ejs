@@ -58,7 +58,7 @@
     <div class="mb-3">
       <% campground.images.forEach((image, idx) => { %>
         <img
-          src="<%= image.url %>" alt=""
+          src="<%= image.thumbnail %>" alt=""
           class="img-thumbnail" />
         <div class="form-check-inline">
           <label for="image-<%= idx %>">Delete?</label>
