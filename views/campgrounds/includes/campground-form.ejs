@@ -54,6 +54,21 @@
       Please write a description!
     </div>
   </div>
+  <% if (campground) { %>
+    <div class="mb-3">
+      <% campground.images.forEach((image, idx) => { %>
+        <img
+          src="<%= image.url %>" alt=""
+          class="img-thumbnail" />
+        <div class="form-check-inline">
+          <label for="image-<%= idx %>">Delete?</label>
+          <input
+            type="checkbox" name="deleteImages[]" id="image-<%= idx %>"
+            value="<%= image.filename %>" />
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
   <div class="mb-3">
     <button class="btn btn-success">
       <%= campground ? 'Update Campground' : 'Add Campground' %>

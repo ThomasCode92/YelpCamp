@@ -77,6 +77,7 @@ async function getEditCampground(req, res) {
 }
 
 async function editCampground(req, res, next) {
+  console.log(req.body);
   const campgroundId = req.params.id;
   const { title, location, price, description } = req.body.campground;
   const { files } = req;
