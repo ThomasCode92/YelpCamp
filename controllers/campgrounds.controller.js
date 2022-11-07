@@ -1,3 +1,4 @@
+const { cloudinary } = require('../config/cloudinary');
 const { flashDataToSession } = require('../util/session-flash');
 
 const Campground = require('../models/campground.model');
@@ -32,13 +33,20 @@ function getNewCampground(req, res) {
 }
 
 async function postNewCampground(req, res) {
-  const { title, location, image, price, description } = req.body.campground;
+  const { title, location, price, description } = req.body.campground;
+  const { files } = req;
   const userId = req.user._id;
 
-  const campgroundData = { title, location, image, price, description };
+  const images = files.map(file => ({
+    url: file.path,
+    filename: file.filename,
+  }));
+
+  const campgroundData = { title, location, price, description };
   const campground = new Campground(campgroundData);
 
   campground.author = userId;
+  campground.images = images;
   await campground.save();
 
   const flashData = {
@@ -71,11 +79,38 @@ async function getEditCampground(req, res) {
 
 async function editCampground(req, res, next) {
   const campgroundId = req.params.id;
-  const { title, location, image, price, description } = req.body.campground;
+  const { title, location, price, description } = req.body.campground;
+  const { deleteImages } = req.body;
+  const { files } = req;
 
-  const campgroundData = { title, location, image, price, description };
+  const images = files.map(file => ({
+    url: file.path,
+    filename: file.filename,
+  }));
 
-  await Campground.findByIdAndUpdate(campgroundId, campgroundData);
+  const campgroundData = { title, location, price, description };
+
+  const campground = await Campground.findByIdAndUpdate(
+    campgroundId,
+    campgroundData
+  );
+
+  campground.images.push(...images);
+  await campground.save();
+
+  if (deleteImages) {
+    const cloudinaryDestroyCalls = [];
+
+    deleteImages.forEach(filename => {
+      cloudinaryDestroyCalls.push(cloudinary.uploader.destroy(filename));
+    });
+
+    await Promise.all(cloudinaryDestroyCalls);
+
+    await campground.updateOne({
+      $pull: { images: { filename: { $in: deleteImages } } },
+    });
+  }
 
   const flashData = {
     status: 'success',
