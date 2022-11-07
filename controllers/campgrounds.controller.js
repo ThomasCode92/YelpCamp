@@ -1,3 +1,4 @@
+const { cloudinary } = require('../config/cloudinary');
 const { flashDataToSession } = require('../util/session-flash');
 
 const Campground = require('../models/campground.model');
@@ -77,9 +78,9 @@ async function getEditCampground(req, res) {
 }
 
 async function editCampground(req, res, next) {
-  console.log(req.body);
   const campgroundId = req.params.id;
   const { title, location, price, description } = req.body.campground;
+  const { deleteImages } = req.body;
   const { files } = req;
 
   const images = files.map(file => ({
@@ -95,8 +96,21 @@ async function editCampground(req, res, next) {
   );
 
   campground.images.push(...images);
-
   await campground.save();
+
+  if (deleteImages) {
+    const cloudinaryDestroyCalls = [];
+
+    deleteImages.forEach(filename => {
+      cloudinaryDestroyCalls.push(cloudinary.uploader.destroy(filename));
+    });
+
+    await Promise.all(cloudinaryDestroyCalls);
+
+    await campground.updateOne({
+      $pull: { images: { filename: { $in: deleteImages } } },
+    });
+  }
 
   const flashData = {
     status: 'success',
