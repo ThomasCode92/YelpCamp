@@ -45,8 +45,6 @@ async function postNewCampground(req, res) {
     .forwardGeocode({ query: location, limit: 1 })
     .send();
 
-  console.log(geoData.body.features[0].geometry.coordinates);
-
   const images = files.map(file => ({
     url: file.path,
     filename: file.filename,
@@ -55,6 +53,7 @@ async function postNewCampground(req, res) {
   const campgroundData = { title, location, price, description };
   const campground = new Campground(campgroundData);
 
+  campground.geometry = geoData.body.features[0].geometry;
   campground.author = userId;
   campground.images = images;
   await campground.save();
