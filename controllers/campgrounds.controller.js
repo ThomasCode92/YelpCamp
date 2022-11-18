@@ -1,7 +1,11 @@
+const mapboxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+
 const { cloudinary } = require('../config/cloudinary');
 const { flashDataToSession } = require('../util/session-flash');
 
 const Campground = require('../models/campground.model');
+
+const geocoder = mapboxGeocoding({ accessToken: process.env.MAPBOX_API_KEY });
 
 async function getAllCampgrounds(req, res, next) {
   const campgrounds = await Campground.find({});
@@ -36,6 +40,12 @@ async function postNewCampground(req, res) {
   const { title, location, price, description } = req.body.campground;
   const { files } = req;
   const userId = req.user._id;
+
+  const geoData = await geocoder
+    .forwardGeocode({ query: location, limit: 1 })
+    .send();
+
+  console.log(geoData.body.features[0].geometry.coordinates);
 
   const images = files.map(file => ({
     url: file.path,
