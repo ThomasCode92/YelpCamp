@@ -92,12 +92,17 @@ async function editCampground(req, res, next) {
   const { deleteImages } = req.body;
   const { files } = req;
 
+  const geoData = await geocoder
+    .forwardGeocode({ query: location, limit: 1 })
+    .send();
+
   const images = files.map(file => ({
     url: file.path,
     filename: file.filename,
   }));
 
   const campgroundData = { title, location, price, description };
+  campgroundData.geometry = geoData.body.features[0].geometry;
 
   const campground = await Campground.findByIdAndUpdate(
     campgroundId,
