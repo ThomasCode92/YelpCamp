@@ -1,7 +1,11 @@
+const mapboxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+
 const { cloudinary } = require('../config/cloudinary');
 const { flashDataToSession } = require('../util/session-flash');
 
 const Campground = require('../models/campground.model');
+
+const geocoder = mapboxGeocoding({ accessToken: process.env.MAPBOX_API_KEY });
 
 async function getAllCampgrounds(req, res, next) {
   const campgrounds = await Campground.find({});
@@ -37,6 +41,10 @@ async function postNewCampground(req, res) {
   const { files } = req;
   const userId = req.user._id;
 
+  const geoData = await geocoder
+    .forwardGeocode({ query: location, limit: 1 })
+    .send();
+
   const images = files.map(file => ({
     url: file.path,
     filename: file.filename,
@@ -45,6 +53,7 @@ async function postNewCampground(req, res) {
   const campgroundData = { title, location, price, description };
   const campground = new Campground(campgroundData);
 
+  campground.geometry = geoData.body.features[0].geometry;
   campground.author = userId;
   campground.images = images;
   await campground.save();
@@ -83,12 +92,17 @@ async function editCampground(req, res, next) {
   const { deleteImages } = req.body;
   const { files } = req;
 
+  const geoData = await geocoder
+    .forwardGeocode({ query: location, limit: 1 })
+    .send();
+
   const images = files.map(file => ({
     url: file.path,
     filename: file.filename,
   }));
 
   const campgroundData = { title, location, price, description };
+  campgroundData.geometry = geoData.body.features[0].geometry;
 
   const campground = await Campground.findByIdAndUpdate(
     campgroundId,

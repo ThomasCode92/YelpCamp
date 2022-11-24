@@ -1,9 +1,15 @@
 <div class="card mb-3">
   <div class="row">
     <div class="col-md-4">
-      <img
-        src="<%= campground.images[0].url %> " alt=""
-        class="img-fluid" style="height: 100% !important;">
+      <% if (campground.images.length) { %>
+        <img
+          src="<%= campground.images[0].url %>" alt=""
+          class="img-fluid" style="height: 100% !important;" />
+      <% } else { %>
+        <img
+          src="https://res.cloudinary.com/dkesh4gtb/image/upload/v1667686236/yelpcamp/trod5cbdb32k76mp0i7o.jpg" alt=""
+          class="img-fluid" style="height: 100% !important;" />
+      <% } %>
     </div>
     <div class="col-md-8">
       <div class="card-body">

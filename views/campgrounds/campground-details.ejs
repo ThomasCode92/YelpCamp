@@ -1,8 +1,21 @@
 <%- include('../shared/includes/head', { pageTitle: campground.title }) %>
     <link rel="stylesheet" href="/styles/starability.css" />
     <link rel="stylesheet" href="/styles/carousel.css" />
+
+    <!-- Mapbox -->    
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
+
+    <!-- Custom Scripts -->
     <script src="/scripts/form-submission.js" defer></script>
     <script src="/scripts/reviews.js" defer></script>
+    <script src="/scripts/map.js" defer></script>
+
+    <!-- Set Global Variables - For use in map.js -->
+    <script>
+      const mapToken = '<%- process.env.MAPBOX_API_KEY %>';
+      const campground = '<%- JSON.stringify(campground) %>'
+    </script>
   </head>
   <body>
     <%- include('../shared/includes/navbar') %>
@@ -14,6 +27,7 @@
           <%- include('includes/campground-card', { campground }) %>
         </div>
         <div class="col-6">
+          <div id='map' style='width: 400px; height: 300px;'></div>
           <% if (locals.user) { %>
             <h2>Leave a Review</h2>
             <%- include('includes/review-form', { campground }) %>           
