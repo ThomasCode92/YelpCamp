@@ -40,11 +40,16 @@ const seedDB = async () => {
         filename: 'yelpcamp/ywst7xgukblfwkhbsiog',
       },
     ];
+    const geometry = {
+      type: 'Point',
+      coordinates: [randomCity.longitude, randomCity.latitude],
+    };
 
     const campground = new Campground({
       title,
       price: randomPrice,
       location,
+      geometry,
       description,
       images,
       author: registeredUser._id,
