@@ -3,6 +3,8 @@
 
 mapboxgl.accessToken = mapToken;
 
+const campgroundData = { features: JSON.parse(campgrounds) };
+
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/dark-v11',
@@ -13,7 +15,7 @@ const map = new mapboxgl.Map({
 map.on('load', () => {
   map.addSource('earthquakes', {
     type: 'geojson',
-    data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
+    data: campgroundData,
     cluster: true,
     clusterMaxZoom: 14,
     clusterRadius: 50,
