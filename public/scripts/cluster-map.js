@@ -4,12 +4,14 @@
 mapboxgl.accessToken = mapToken;
 
 const campgroundData = { features: JSON.parse(campgrounds) };
+const numberOfCampgrounds = campgroundData.features.length;
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/dark-v11',
+  style: 'mapbox://styles/mapbox/light-v10',
   center: [-103.5917, 40.6699],
   zoom: 3,
+  projection: 'mercator',
 });
 
 map.on('load', () => {
@@ -31,12 +33,20 @@ map.on('load', () => {
         'step',
         ['get', 'point_count'],
         '#51bbd6',
-        100,
+        numberOfCampgrounds / 10,
         '#f1f075',
-        750,
+        numberOfCampgrounds / 5,
         '#f28cb1',
       ],
-      'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+      'circle-radius': [
+        'step',
+        ['get', 'point_count'],
+        20,
+        numberOfCampgrounds / 10,
+        25,
+        numberOfCampgrounds / 5,
+        30,
+      ],
     },
   });
 
