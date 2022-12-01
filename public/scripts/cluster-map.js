@@ -13,7 +13,7 @@ const map = new mapboxgl.Map({
 });
 
 map.on('load', () => {
-  map.addSource('earthquakes', {
+  map.addSource('campgrounds', {
     type: 'geojson',
     data: campgroundData,
     cluster: true,
@@ -24,7 +24,7 @@ map.on('load', () => {
   map.addLayer({
     id: 'clusters',
     type: 'circle',
-    source: 'earthquakes',
+    source: 'campgrounds',
     filter: ['has', 'point_count'],
     paint: {
       'circle-color': [
@@ -43,7 +43,7 @@ map.on('load', () => {
   map.addLayer({
     id: 'cluster-count',
     type: 'symbol',
-    source: 'earthquakes',
+    source: 'campgrounds',
     filter: ['has', 'point_count'],
     layout: {
       'text-field': ['get', 'point_count_abbreviated'],
@@ -55,7 +55,7 @@ map.on('load', () => {
   map.addLayer({
     id: 'unclustered-point',
     type: 'circle',
-    source: 'earthquakes',
+    source: 'campgrounds',
     filter: ['!', ['has', 'point_count']],
     paint: {
       'circle-color': '#11b4da',
@@ -71,7 +71,7 @@ map.on('load', () => {
     });
     const clusterId = features[0].properties.cluster_id;
     map
-      .getSource('earthquakes')
+      .getSource('campgrounds')
       .getClusterExpansionZoom(clusterId, (err, zoom) => {
         if (err) return;
 
