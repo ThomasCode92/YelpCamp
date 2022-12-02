@@ -9,7 +9,7 @@
     <!-- Set Global Variables - For use in cluster map.js -->
     <script>
       const mapToken = '<%- process.env.MAPBOX_API_KEY %>';
-      const campgrounds = '<%- JSON.stringify(campgrounds) %>';
+      const campgrounds = '<%- JSON.stringify(campgrounds) %>'.replace(/\n/g, '');
     </script>
   </head>
   <body>

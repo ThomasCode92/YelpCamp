@@ -69,7 +69,7 @@ map.on('load', () => {
     filter: ['!', ['has', 'point_count']],
     paint: {
       'circle-color': '#11b4da',
-      'circle-radius': 4,
+      'circle-radius': 6,
       'circle-stroke-width': 1,
       'circle-stroke-color': '#fff',
     },
@@ -94,17 +94,13 @@ map.on('load', () => {
 
   map.on('click', 'unclustered-point', event => {
     const coordinates = event.features[0].geometry.coordinates.slice();
-    const tsunami = event.features[0].properties.tsunami === 1 ? 'yes' : 'no';
-    const { mag } = event.features[0].properties;
+    const { popupMarkup } = event.features[0].properties;
 
     while (Math.abs(event.lngLat.lng - coordinates[0]) > 180) {
       coordinates[0] += event.lngLat.lng > coordinates[0] ? 360 : -360;
     }
 
-    new mapboxgl.Popup()
-      .setLngLat(coordinates)
-      .setHTML(`magnitude: ${mag}<br>Was there a tsunami?: ${tsunami}`)
-      .addTo(map);
+    new mapboxgl.Popup().setLngLat(coordinates).setHTML(popupMarkup).addTo(map);
   });
 
   map.on('mouseenter', 'clusters', () => {
