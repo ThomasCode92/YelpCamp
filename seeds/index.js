@@ -7,6 +7,8 @@ const citiesData = require('./cities.json');
 const descriptors = require('./descriptors.json');
 const places = require('./places.json');
 
+const NUMBER_OF_CAMPGROUNDS = process.env.NUMBER_OF_CAMPGROUNDS || 20;
+
 const getRandomElement = array =>
   array[Math.floor(Math.random() * array.length)];
 
@@ -19,7 +21,7 @@ const seedDB = async () => {
 
   const campgrounds = [];
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < NUMBER_OF_CAMPGROUNDS; i++) {
     const randomCityIndex = Math.floor(Math.random() * 1000);
     const randomCity = citiesData[randomCityIndex];
     const randomDescriptor = getRandomElement(descriptors);
