@@ -45,6 +45,10 @@ app.use(methodOverride('_method')); // Override POST requests having _method in 
 app.use(checkAuthStatus);
 app.use(sessionFlash);
 
+app.get('/', (req, res, next) => {
+  res.render('home.ejs');
+});
+
 app.use('/auth', authRoutes);
 app.use('/campgrounds', campgroundsRoutes);
 app.use('/campgrounds/:campId/reviews', reviewsRoutes);
