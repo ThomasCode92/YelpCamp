@@ -14,6 +14,12 @@ const map = new mapboxgl.Map({
   projection: 'mercator',
 });
 
+map.addControl(
+  new mapboxgl.NavigationControl({
+    showCompass: false,
+  })
+);
+
 map.on('load', () => {
   map.addSource('campgrounds', {
     type: 'geojson',
