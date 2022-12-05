@@ -14,7 +14,7 @@
     <!-- Set Global Variables - For use in map.js -->
     <script>
       const mapToken = '<%- process.env.MAPBOX_API_KEY %>';
-      const campground = '<%- JSON.stringify(campground) %>'
+      const campground = '<%- JSON.stringify(campground) %>'.replace(/\n/g, ' ');
     </script>
   </head>
   <body>
@@ -27,7 +27,7 @@
           <%- include('includes/campground-card', { campground }) %>
         </div>
         <div class="col-6">
-          <div id='map' style='width: 400px; height: 300px;'></div>
+          <div id='map'></div>
           <% if (locals.user) { %>
             <h2>Leave a Review</h2>
             <%- include('includes/review-form', { campground }) %>           

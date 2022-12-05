@@ -5,7 +5,7 @@ const deleteBtnElements = document.querySelectorAll(
   '.reviews-list-item button'
 );
 
-const campgroundId = reviewFormElement.dataset.campgroundid;
+const campgroundId = reviewFormElement?.dataset.campgroundid;
 const baseUrl = `/campgrounds/${campgroundId}/reviews`;
 
 async function deleteReview(event) {
@@ -98,7 +98,7 @@ async function submitReview(event) {
   createReview(newReview);
 }
 
-reviewFormElement.addEventListener('submit', submitReview);
+reviewFormElement?.addEventListener('submit', submitReview);
 
 deleteBtnElements.forEach(btnElement => {
   btnElement.addEventListener('click', deleteReview);

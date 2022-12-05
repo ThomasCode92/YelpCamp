@@ -9,15 +9,11 @@ const map = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/light-v10',
   center: campgroundData.geometry.coordinates,
   zoom: 9,
-  projection: 'globe',
+  projection: 'mercator',
 });
 
 const marker = new mapboxgl.Marker();
 const popup = new mapboxgl.Popup({ offset: 25 });
-
-map.on('style.load', () => {
-  map.setFog({});
-});
 
 popup.setHTML(`
   <h3>${campgroundData.title}</h3>

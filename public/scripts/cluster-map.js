@@ -7,12 +7,18 @@ const campgroundData = { features: JSON.parse(campgrounds) };
 const numberOfCampgrounds = campgroundData.features.length;
 
 const map = new mapboxgl.Map({
-  container: 'map',
+  container: 'cluster-map',
   style: 'mapbox://styles/mapbox/light-v10',
   center: [-103.5917, 40.6699],
   zoom: 3,
   projection: 'mercator',
 });
+
+map.addControl(
+  new mapboxgl.NavigationControl({
+    showCompass: false,
+  })
+);
 
 map.on('load', () => {
   map.addSource('campgrounds', {
