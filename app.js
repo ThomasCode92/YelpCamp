@@ -7,6 +7,7 @@ const methodOverride = require('method-override');
 const expressSession = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const helmet = require('helmet');
 
 const createSessionConfig = require('./config/session');
 const ExpressError = require('./util/ExpressError');
@@ -32,8 +33,8 @@ app.use(express.urlencoded({ extended: true })); // Parse incoming request bodie
 app.use(express.json());
 
 app.use(mongoSanitize()); // Sanitizes user-supplied data
-
 app.use(expressSession(sessionConfig)); // Create the Express Session
+app.use(helmet({ contentSecurityPolicy: false })); // Better security by setting various HTTP headers
 
 // Passport Setup & Configuration - (Local Strategy)
 app.use(passport.initialize());
