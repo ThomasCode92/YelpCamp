@@ -10,6 +10,7 @@ const LocalStrategy = require('passport-local');
 const helmet = require('helmet');
 
 const createSessionConfig = require('./config/session');
+const helmetConfig = require('./config/helmet');
 const ExpressError = require('./util/ExpressError');
 
 const checkAuthStatus = require('./middleware/check-auth');
@@ -23,6 +24,7 @@ const reviewsRoutes = require('./routes/reviews.routes');
 
 const app = express();
 const sessionConfig = createSessionConfig();
+const contentSecurityPolicyConfig = helmetConfig.contentSecurityPolicy;
 
 // Activate EJS view engine
 app.set('view engine', 'ejs');
@@ -34,7 +36,7 @@ app.use(express.json());
 
 app.use(mongoSanitize()); // Sanitizes user-supplied data
 app.use(expressSession(sessionConfig)); // Create the Express Session
-app.use(helmet({ contentSecurityPolicy: false })); // Better security by setting various HTTP headers
+app.use(helmet.contentSecurityPolicy(contentSecurityPolicyConfig)); // Better security by setting various HTTP headers
 
 // Passport Setup & Configuration - (Local Strategy)
 app.use(passport.initialize());
