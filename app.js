@@ -77,6 +77,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
+  .set('strictQuery', false)
   .connect(process.env.MONGODB_CONNECTION)
   .then(() => console.log('Connected to MongoDB'))
   .then(() => {
