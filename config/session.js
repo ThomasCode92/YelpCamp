@@ -15,12 +15,14 @@ function createSessionStore() {
 
 function createSessionConfig() {
   return {
+    name: 'yelpcamp_session',
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: createSessionStore(),
     cookie: {
       httpOnly: true,
+      // secure: true,
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in ms
     },
   };
