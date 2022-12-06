@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 const mongoose = require('mongoose');
+const mongoSanitize = require('express-mongo-sanitize');
 const methodOverride = require('method-override');
 const expressSession = require('express-session');
 const passport = require('passport');
@@ -29,6 +30,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public')); // Serve static files (e.g. CSS files)
 app.use(express.urlencoded({ extended: true })); // Parse incoming request bodies
 app.use(express.json());
+
+app.use(mongoSanitize()); // Sanitizes user-supplied data
 
 app.use(expressSession(sessionConfig)); // Create the Express Session
 
